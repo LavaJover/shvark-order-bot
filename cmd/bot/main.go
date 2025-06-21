@@ -10,9 +10,13 @@ import (
 	"github.com/LavaJover/shvark-order-bot/internal/infrastructure/kafka"
 	"github.com/LavaJover/shvark-order-bot/internal/infrastructure/postgres"
 	"github.com/LavaJover/shvark-order-bot/internal/usecase"
+	"github.com/joho/godotenv"
 )
 
 func main(){
+	if err := godotenv.Load(); err != nil {
+		log.Printf("failed to load .env")
+	}
 	// read config
 	cfg := config.MustLoad()
 	fmt.Println(cfg)

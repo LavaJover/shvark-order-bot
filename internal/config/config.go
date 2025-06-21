@@ -34,6 +34,7 @@ func MustLoad() *OrderBotConfig {
 	// Processing env config variable and file
 	configPath := os.Getenv("ORDER_BOT_CONFIG_PATH")
 
+
 	if configPath == ""{
 		log.Fatalf("ORDER_BOT_CONFIG_PATH was not found\n")
 	}
