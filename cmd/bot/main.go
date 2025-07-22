@@ -19,9 +19,8 @@ func main(){
 	}
 	// read config
 	cfg := config.MustLoad()
-	fmt.Println(cfg)
 
-	ssoAddr := "localhost:50051"
+	ssoAddr := fmt.Sprintf("%s:%s", cfg.SSOService.Host, cfg.SSOService.Port)
 	ssoClient, err := grpcapi.NewSSOClient(ssoAddr)
 	if err != nil {
 		log.Fatalf("failed to connect SSO-client")
@@ -31,12 +30,12 @@ func main(){
 	authRepo := postgres.NewDefaultAuthRepository(db)
 	authUC := usecase.NewAuthUsecase(authRepo, ssoClient)
 
-	bot, err := telegram.NewBot("7096257833:AAEDRlZGucm_5-g0MxK4BiUqZ1bJo_Bon3M", authUC)
+	bot, err := telegram.NewBot(cfg.BotToken, authUC)
 	if err != nil {
 		log.Fatalf("failed to init bot")
 	}
 
-	go kafka.ListenToOrderEvents([]string{"localhost:9092"}, "order-events", bot.Notify)
+	go kafka.ListenToOrderEvents([]string{fmt.Sprintf("%s:%s", cfg.KafkaService.Host, cfg.KafkaService.Port)}, "order-events", bot.Notify)
 
 	bot.Start()
 

@@ -11,7 +11,19 @@ type OrderBotConfig struct {
 	GRPCServer 		   `yaml:"grpc_server"`
 	OrderBotDB 		   `yaml:"order_db"`
 	LogConfig 		   `yaml:"log_config"`
-	BotToken	string `yanl:"bot_token"`
+	BotToken	string `yaml:"bot_token"`
+	SSOService		   `yaml:"sso-service"`
+	KafkaService 	   `yaml:"kafka-service"`
+}
+
+type KafkaService struct {
+	Host string	`yaml:"host"`
+	Port string `yaml:"port"`
+}
+
+type SSOService struct {
+	Host string `yaml:"host"`
+	Port string `yaml:"port"`
 }
 
 type GRPCServer struct {
