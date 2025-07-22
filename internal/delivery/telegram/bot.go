@@ -48,6 +48,10 @@ func (b *Bot) Notify(event kafka.OrderEvent) {
 		Status: event.Status,
 		Amount: event.AmountFiat,
 		Currency: event.Currency,
+		BankName: event.BankName,
+		Phone: event.Phone,
+		CardNumber: event.CardNumber,
+		Owner: event.Owner,
 	}
 	b.orderChan <- order
 }
