@@ -1,7 +1,8 @@
 package telegram
 
 import (
-	"log"
+	"log/slog"
+	"time"
 
 	"github.com/LavaJover/shvark-order-bot/internal/domain"
 	"github.com/LavaJover/shvark-order-bot/internal/infrastructure/kafka"
@@ -60,15 +61,17 @@ func (b *Bot) listenForNotifications() {
 	for order := range b.orderChan {
 		telegramIDs, err := b.authUC.GetTelegramIDsByTraderID(order.TraderID)
 		if err != nil {
-			log.Printf("Failed to get telegram bindings for trader %s\n", order.TraderID)
+			slog.Error("failed to get telegram bindings", "trader",order.TraderID, "error", err.Error())
 		}
 		for _, telegramID := range telegramIDs {
+			start := time.Now()
 			text := order.String()
 			msg := tgbotapi.NewMessage(telegramID, text)
 			_, err := b.api.Send(msg)
 			if err != nil {
-				log.Printf("Failed to send TG message: %v\n", err)
+				slog.Error("failed to send tg message", "elapsed", time.Since(start), "error", err.Error())
 			}
+			slog.Info("succeed to send tg message", "elapsed", time.Since(start))
 		}
 	}
 }

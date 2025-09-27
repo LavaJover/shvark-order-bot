@@ -1,6 +1,8 @@
 package domain
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type OrderNotification struct {
 	OrderID 	string
@@ -16,7 +18,7 @@ type OrderNotification struct {
 
 func (n OrderNotification) String() string {
 	if n.Phone != "" {
-		return fmt.Sprintf("Сделка %s\nСтатус: %s\nСумма: %f %s\nРеквизит: %s / %s / %s", n.OrderID, n.Status, n.Amount, n.Currency, n.Phone, n.BankName, n.Owner)
+		return fmt.Sprintf("%s\n%s\n%d %s %s / %s / %s", n.Status, n.OrderID, int(n.Amount), n.Currency, n.Phone, n.BankName, n.Owner)
 	}
-	return fmt.Sprintf("Сделка %s\nСтатус: %s\nСумма: %f %s\nРеквизит: %s / %s / %s", n.OrderID, n.Status, n.Amount, n.Currency, n.CardNumber, n.BankName, n.Owner)
+	return fmt.Sprintf("%s\n%s\n%d %s %s / %s / %s", n.Status, n.OrderID, int(n.Amount), n.Currency, n.CardNumber, n.BankName, n.Owner)
 }

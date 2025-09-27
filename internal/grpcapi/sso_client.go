@@ -35,7 +35,7 @@ func NewSSOClient(addr string) (*SSOClient, error) {
 }
 
 func (c *SSOClient) ValidateToken(token string) (bool, string, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	response, err := c.service.ValidateToken(

@@ -17,8 +17,14 @@ type OrderBotConfig struct {
 }
 
 type KafkaService struct {
-	Host string	`yaml:"host"`
-	Port string `yaml:"port"`
+	Host  string   `yaml:"host"`
+	Port  string   `yaml:"port"`
+	Topic string   `yaml:"topic"`
+	GroupID string `yaml:"group_id"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Mechanism string `json:"mechanism"`
+	TLSEnabled bool `json:"tls_enabled"`
 }
 
 type SSOService struct {
@@ -45,7 +51,6 @@ func MustLoad() *OrderBotConfig {
 
 	// Processing env config variable and file
 	configPath := os.Getenv("ORDER_BOT_CONFIG_PATH")
-
 
 	if configPath == ""{
 		log.Fatalf("ORDER_BOT_CONFIG_PATH was not found\n")

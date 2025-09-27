@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"log/slog"
 
 	"github.com/LavaJover/shvark-order-bot/internal/config"
 	"github.com/LavaJover/shvark-order-bot/internal/delivery/telegram"
@@ -15,7 +16,7 @@ import (
 
 func main(){
 	if err := godotenv.Load(); err != nil {
-		log.Printf("failed to load .env")
+		log.Fatalf("failed to load .env: %v", err)
 	}
 	// read config
 	cfg := config.MustLoad()
@@ -35,8 +36,23 @@ func main(){
 		log.Fatalf("failed to init bot")
 	}
 
-	go kafka.ListenToOrderEvents([]string{fmt.Sprintf("%s:%s", cfg.KafkaService.Host, cfg.KafkaService.Port)}, "order-events", bot.Notify)
+	go func(cfg kafka.KafkaConfig, notify func(event kafka.OrderEvent)){
+		kafkaConsumer, err := kafka.NewKafkaConsumer(cfg)
+		if err != nil {
+			slog.Error("failed to init kafka consumer", "error", err.Error())
+			return
+		}
+
+		kafkaConsumer.ListenToOrderEvents(notify)
+
+	}(kafka.KafkaConfig{
+		Brokers: []string{fmt.Sprintf("%s:%s", cfg.KafkaService.Host, cfg.KafkaService.Port)},
+		Topic: cfg.Topic,
+		Username: cfg.Username,
+		Password: cfg.Password,
+		Mechanism: cfg.Mechanism,
+		TLSEnabled: cfg.TLSEnabled,
+	}, bot.Notify)
 
 	bot.Start()
-
 }
