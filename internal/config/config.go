@@ -9,7 +9,7 @@ import (
 type OrderBotConfig struct {
 	Env string 		   `yaml:"env"`
 	GRPCServer 		   `yaml:"grpc_server"`
-	OrderBotDB 		   `yaml:"order_db"`
+	OrderBotDB 		   `yaml:"order_bot_db"`
 	LogConfig 		   `yaml:"log_config"`
 	BotToken	string `yaml:"bot_token"`
 	SSOService		   `yaml:"sso-service"`
